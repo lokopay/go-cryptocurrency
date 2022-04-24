@@ -4,50 +4,26 @@ import "errors"
 
 // Amount is a datastructure that stores the volume
 type Amount struct {
-	val float64
-}
-
-type Volume struct {
 	val int64
 }
 
 type Crypto struct {
 	amount   *Amount
-	volume   *Volume
 	currency *Currency
 }
 
-func New(amount float64, code string) *Crypto {
+func New(amount int64, code string) *Crypto {
 
 	amt := &Amount{val: amount}
 	cur := newCurrency(code).get()
-	vol := amtToVol(amt, cur)
 
 	return &Crypto{
 		amount:   amt,
-		volume:   vol,
 		currency: cur,
 	}
 }
 
-func NewFromVolume(volume int64, code string) *Crypto {
-
-	vol := &Volume{val: volume}
-	cur := newCurrency(code).get()
-	amt := volToAmt(vol, cur)
-
-	return &Crypto{
-		amount:   amt,
-		volume:   vol,
-		currency: cur,
-	}
-}
-
-func (c *Crypto) Volume() int64 {
-	return c.volume.val
-}
-
-func (c *Crypto) Amount() float64 {
+func (c *Crypto) Amount() int64 {
 	return c.amount.val
 }
 
@@ -78,33 +54,46 @@ func (c *Crypto) Allocate(rs ...int) ([]*Crypto, error) {
 
 	for _, r := range rs {
 		party := &Crypto{
-			volume:   allocate(c.volume, r, sum),
+			amount:   allocate(c.amount, r, sum),
 			currency: c.currency,
 		}
 
 		cs = append(cs, party)
-		total += party.volume.val
+		total += party.amount.val
 	}
 
 	// Calculate leftover value and divide to first parties.
-	lo := c.volume.val - total
+	lo := c.amount.val - total
 	sub := int64(1)
 	if lo < 0 {
 		sub = -sub
 	}
 
 	for p := 0; lo != 0; p++ {
-		cs[p].volume = add(cs[p].volume, &Volume{sub})
+		cs[p].amount = add(cs[p].amount, &Amount{sub})
 		lo -= sub
 	}
 
-	for _, cc := range cs {
-		cc.amount = volToAmt(cc.volume, cc.currency)
-	}
+	// for _, cc := range cs {
+	// 	cc.amount = volToAmt(cc.volume, cc.currency)
+	// }
 
 	return cs, nil
 }
 
-func (c *Crypto) Display() string {
+// AsMajorUnits lets represent Money struct as subunits (float64) in given Currency value
+func (c *Crypto) AsMajorUnits() float64 {
+	cur := c.currency.get()
 
+	return cur.Formatter("").ToMajorUnits(c.amount.val)
+}
+
+func (c *Crypto) AsUnits(unit string) float64 {
+	cur := c.currency.get()
+	return cur.Formatter(unit).AsUnits(c.amount.val)
+}
+
+func (c *Crypto) Display(unit string) string {
+	cur := c.currency.get()
+	return cur.Formatter(unit).Format(c.amount.val)
 }
