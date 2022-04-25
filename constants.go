@@ -32,24 +32,30 @@ package cryptocurrency
 // 	XMR  Code = "XMR"
 // 	ZEC  Code = "ZEC"
 // )
+type CryptoCurrency string
+
 const (
-	BCH  = "BCH"
-	BNB  = "BNB"
-	BTC  = "BTC"
-	DOGE = "DOGE"
-	ETH  = "ETH"
-	LTC  = "LTC"
-	SHIB = "SHIB"
-	XMR  = "XMR"
-	ZEC  = "ZEC"
+	CryptoCurrencyBCH  CryptoCurrency = "BCH"
+	CryptoCurrencyBNB  CryptoCurrency = "BNB"
+	CryptoCurrencyDOGE CryptoCurrency = "DOGE"
+	CryptoCurrencyETH  CryptoCurrency = "ETH"
+	CryptoCurrencyLTC  CryptoCurrency = "LTC"
+	CryptoCurrencySHIB CryptoCurrency = "SHIB"
+	CryptoCurrencyXBT  CryptoCurrency = "XBT"
+	CryptoCurrencyXMR  CryptoCurrency = "XMR"
+	CryptoCurrencyZEC  CryptoCurrency = "ZEC"
 )
+
+func (c CryptoCurrency) String() string {
+	return string(c)
+}
 
 const (
 	// bitcoin units
-	cBTC = "cBTC"
-	mBTC = "mBTC"
+	sat  = "sat"
 	uBTC = "uBTC"
-	SAT  = "satoshi"
+	mBTC = "mBTC"
+	BTC  = "BTC"
 
 	// ether units
 	wei        = "wei"
@@ -61,6 +67,8 @@ const (
 	ether      = "ether"
 
 	// litecoin units
-	mLTC = "mLTC"
-	uLTC = "uLTC"
+	litoshis = "litoshis"
+	uLTC     = "uLTC"
+	mLTC     = "mLTC"
+	LTC      = "LTC"
 )
