@@ -3,11 +3,12 @@ package cryptocurrency
 import "strings"
 
 type Currency struct {
-	Code     string
+	Currency CryptoCurrency
 	AltCode  string
 	Name     string
 	Decimal  string
 	Template string
+	Major    string
 	Units    map[string]Unit
 }
 
@@ -16,41 +17,44 @@ type Unit struct {
 	Grapheme string
 }
 
-var units = map[string]map[string]Unit{
-	BTC: {
-		BTC:  {Fraction: 8, Grapheme: "BTC"},
+var units = map[CryptoCurrency]map[string]Unit{
+	CryptoCurrencyXBT: {
+		sat:  {Fraction: 0, Grapheme: "sat"},
+		uBTC: {Fraction: 2, Grapheme: "uBTC"},
 		mBTC: {Fraction: 5, Grapheme: "mBTC"},
-		uBTC: {Fraction: 3, Grapheme: "uBTC"}},
-	ETH: {
-		wei:  {Fraction: 18, Grapheme: "wei"},
-		Kwei: {Fraction: 18, Grapheme: "wei"},
-		Mwei: {Fraction: 18, Grapheme: "wei"},
+		BTC:  {Fraction: 8, Grapheme: "BTC"},
 	},
+	CryptoCurrencyETH: {
+		wei:        {Fraction: 0, Grapheme: "wei"},
+		Kwei:       {Fraction: 3, Grapheme: "Kwei"},
+		Mwei:       {Fraction: 6, Grapheme: "Mwei"},
+		Gwei:       {Fraction: 9, Grapheme: "Mwei"},
+		microether: {Fraction: 12, Grapheme: "microether"},
+		milliether: {Fraction: 15, Grapheme: "milliether"},
+		ether:      {Fraction: 18, Grapheme: "ether"},
+	},
+	CryptoCurrencyLTC: {},
 }
 
-var major = map[string]string{
-	BTC: BTC,
+var currencies = map[CryptoCurrency]*Currency{
+	CryptoCurrencyXBT: {Currency: CryptoCurrencyXBT, AltCode: "BTC", Name: "Bitcoin", Decimal: ".", Template: "1 $", Major: "BTC", Units: units[CryptoCurrencyXBT]},
+	CryptoCurrencyETH: {Currency: CryptoCurrencyETH, AltCode: "", Name: "Ether", Decimal: ".", Template: "1 $", Major: "ether", Units: units[CryptoCurrencyETH]},
+	CryptoCurrencyLTC: {Currency: CryptoCurrencyLTC, AltCode: "", Name: "Litecoin", Decimal: ".", Template: "1 $", Major: "LTC", Units: units[CryptoCurrencyLTC]},
 }
 
-var currencies = map[string]*Currency{
-	BTC: {Code: BTC, AltCode: "XBT", Name: "Bitcoin", Decimal: ".", Template: "1 $", Units: units[BTC]},
-	ETH: {Code: ETH, AltCode: "", Name: "Ether", Decimal: ".", Template: "1 $", Units: units[ETH]},
-	LTC: {Code: LTC, AltCode: "", Name: "Litecoin", Decimal: ".", Template: "1 $", Units: units[LTC]},
-}
-
-func newCurrency(code string) *Currency {
-	return &Currency{Code: strings.ToUpper(code)}
+func newCurrency(currency string) *Currency {
+	return &Currency{Currency: CryptoCurrency(strings.ToUpper(currency))}
 }
 
 func (c *Currency) getDefault() *Currency {
-	return &Currency{Code: c.Code, AltCode: "BTX", Name: "Bitcoin"}
+	return &Currency{Currency: c.Currency, AltCode: "BTX", Name: "Bitcoin"}
 }
 
 func (c *Currency) Formatter(unit string) *Formatter {
 	var u Unit
 
 	if unit == "" {
-		u = c.Units[c.Code]
+		u = c.Units[c.Major]
 	} else {
 		u = c.Units[unit]
 	}
@@ -64,7 +68,7 @@ func (c *Currency) Formatter(unit string) *Formatter {
 }
 
 func (c *Currency) get() *Currency {
-	if curr, ok := currencies[c.Code]; ok {
+	if curr, ok := currencies[c.Currency]; ok {
 		return curr
 	}
 
