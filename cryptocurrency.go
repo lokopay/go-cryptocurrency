@@ -28,7 +28,7 @@ func (c *Crypto) Amount() int64 {
 }
 
 func (c Crypto) GetMajorUnit() string {
-	return c.currency.Major
+	return c.currency.get().Major
 }
 
 func (c *Crypto) IsZero() bool {

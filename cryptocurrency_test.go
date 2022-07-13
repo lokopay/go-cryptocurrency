@@ -5,16 +5,27 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	c := New(10000, BTC)
+	c := New(1000, BTC)
 
-	if c.Amount() != 10000 {
-		t.Errorf("Expected %d got %d", 10000, c.Amount())
+	if c.Amount() != 1000 {
+		t.Errorf("Expected %d got %d", 1000, c.Amount())
+	}
+
+	if c.AsUnits("sat") != 1000 {
+		t.Errorf("Expected %g got %g", 1000.0, c.AsUnits("sat"))
+	}
+
+	if c.AsUnits("uBTC") != 10.0 {
+		t.Errorf("Expected %g got %g", 10.0, c.AsUnits("uBTC"))
 	}
 
 	c = New(0, BTC)
-
 	if c.amount.val != 0 {
 		t.Errorf("Expected %d got %d", 0, c.amount.val)
+	}
+
+	if c.GetMajorUnit() != "BTC" {
+		t.Errorf("Major Unit Expected %s, got %s", "BTC", c.GetMajorUnit())
 	}
 
 	c = New(1000, "XBT")

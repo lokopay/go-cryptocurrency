@@ -42,6 +42,7 @@ const (
 	CryptoCurrencyLTC  CryptoCurrency = "LTC"
 	CryptoCurrencySHIB CryptoCurrency = "SHIB"
 	CryptoCurrencyXBT  CryptoCurrency = "XBT"
+	CryptoCurrencyBTC  CryptoCurrency = "BTC"
 	CryptoCurrencyXMR  CryptoCurrency = "XMR"
 	CryptoCurrencyZEC  CryptoCurrency = "ZEC"
 )

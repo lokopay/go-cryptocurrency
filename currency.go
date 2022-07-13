@@ -38,6 +38,7 @@ var units = map[CryptoCurrency]map[string]Unit{
 
 var currencies = map[CryptoCurrency]*Currency{
 	CryptoCurrencyXBT: {Currency: CryptoCurrencyXBT, AltCode: "BTC", Name: "Bitcoin", Decimal: ".", Template: "1 $", Major: "BTC", Units: units[CryptoCurrencyXBT]},
+	CryptoCurrencyBTC: {Currency: CryptoCurrencyXBT, AltCode: "BTC", Name: "Bitcoin", Decimal: ".", Template: "1 $", Major: "BTC", Units: units[CryptoCurrencyXBT]},
 	CryptoCurrencyETH: {Currency: CryptoCurrencyETH, AltCode: "", Name: "Ether", Decimal: ".", Template: "1 $", Major: "ether", Units: units[CryptoCurrencyETH]},
 	CryptoCurrencyLTC: {Currency: CryptoCurrencyLTC, AltCode: "", Name: "Litecoin", Decimal: ".", Template: "1 $", Major: "LTC", Units: units[CryptoCurrencyLTC]},
 }
